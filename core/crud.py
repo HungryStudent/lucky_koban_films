@@ -34,7 +34,7 @@ def change_film(film_id, film_data: schemas.FilmChange):
         stmt = (
             update(models.Film).
             where(models.Film.id == film_id).
-            values(film_data.dict(exclude_unset=True)).
+            values(film_data.dict(exclude_defaults=True)).
             returning(models.Film)
         )
         db.execute(stmt)

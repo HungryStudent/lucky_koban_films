@@ -7,7 +7,7 @@ from endpoints import *
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(docs_url="/docs")
+app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

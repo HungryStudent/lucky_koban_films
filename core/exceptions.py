@@ -1,0 +1,2 @@
+class RatingError(Exception):
+    pass

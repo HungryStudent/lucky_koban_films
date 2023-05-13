@@ -1,8 +1,59 @@
+from pydantic import BaseModel, validator
+
+from core.exceptions import RatingError
+from typing import List
 import datetime
 
-from typing import List
 
-from pydantic import BaseModel
+class JWTPayload(BaseModel):
+    user_id: int
+
+
+class UserForComment(BaseModel):
+    username: str
+    user_role: str
+
+    class Config:
+        orm_mode = True
+
+
+class CommentOut(BaseModel):
+    comment_id: int
+    user: UserForComment
+    content: str
+    comment_datetime: datetime.datetime
+
+    class Config:
+        orm_mode = True
+
+
+class CreateComment(BaseModel):
+    content: str
+    rating: int
+
+    @validator("rating")
+    def check_rating(cls, v):
+        if not 1 <= v <= 5:
+            raise RatingError
+
+
+class UserOut(BaseModel):
+    user_id: int
+    username: str
+    user_role: str
+
+    class Config:
+        orm_mode = True
+
+
+class UserCreds(BaseModel):
+    username: str
+    password: str
+
+
+class CreateUserForDB(BaseModel):
+    username: str
+    password_hash: str
 
 
 class Genre(BaseModel):
@@ -55,9 +106,3 @@ class FilmChange(BaseModel):
     rating: float = None
     release_date: datetime.date = None
     age_rating: int = None
-
-    def __new__(cls, *args, **kwargs):
-        if all(v is None for v in args) and all(v is None for v in kwargs.values()):
-            pass
-        else:
-            return super().__new__(cls)

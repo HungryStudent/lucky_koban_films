@@ -2,7 +2,9 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read("settings.ini")
-
+jwt_secret = config["jwt"]["secret"]
+jwt_algorithm = config["jwt"]["algorithm"]
+salt = config["app"]["salt"]
 
 class DB:
     username = config['db']['username']

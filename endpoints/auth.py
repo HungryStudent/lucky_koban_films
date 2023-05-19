@@ -10,13 +10,13 @@ import hashlib
 router = APIRouter(tags=["Auth"])
 
 
-def create_access_token(user_id):
+def create_access_token(user_id) -> schemas.TokenData:
     expire = datetime.utcnow() + timedelta(days=30)
     token = jwt.encode({"user_id": user_id, "exp": expire}, jwt_secret, algorithm=jwt_algorithm)
-    return token
+    return schemas.TokenData(token=token, expire=expire)
 
 
-@router.post("/reg", status_code=200)
+@router.post("/reg", status_code=200, response_model=schemas.TokenData)
 async def create_user_request(user_data: schemas.UserCreds, db: Session = Depends(get_db)):
     md5 = hashlib.md5()
     md5.update((user_data.password + salt).encode("utf-8"))
@@ -25,11 +25,11 @@ async def create_user_request(user_data: schemas.UserCreds, db: Session = Depend
     user = crud.create_user(db, user_data_for_db)
     if user == "This username already exists":
         raise HTTPException(409, "This username already exists")
-    token = create_access_token(user.user_id)
-    return {"token": token}
+    token_data = create_access_token(user.user_id)
+    return token_data
 
 
-@router.post("/login", status_code=200)
+@router.post("/login", status_code=200, response_model=schemas.TokenData)
 async def login_user_request(user_data: schemas.UserCreds, db: Session = Depends(get_db)):
     user = crud.get_user_creds(db, user_data)
     if user is None:
@@ -39,8 +39,8 @@ async def login_user_request(user_data: schemas.UserCreds, db: Session = Depends
     password_hash = md5.hexdigest()
     if password_hash != user.password_hash:
         raise HTTPException(403, "Invalid username or password")
-    token = create_access_token(user.user_id)
-    return {"token": token}
+    token_data = create_access_token(user.user_id)
+    return token_data
 
 
 @router.get('/get_me', response_model=schemas.UserOut)

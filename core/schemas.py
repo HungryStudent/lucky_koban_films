@@ -2,7 +2,7 @@ from pydantic import BaseModel, validator
 
 from core.exceptions import RatingError
 from typing import List
-import datetime
+from datetime import datetime, date
 
 
 class JWTPayload(BaseModel):
@@ -21,7 +21,7 @@ class CommentOut(BaseModel):
     comment_id: int
     user: UserForComment
     content: str
-    comment_datetime: datetime.datetime
+    comment_datetime: datetime
 
     class Config:
         orm_mode = True
@@ -60,6 +60,11 @@ class UserCreds(BaseModel):
     password: str
 
 
+class TokenData(BaseModel):
+    token: str
+    expire: datetime
+
+
 class CreateUserForDB(BaseModel):
     username: str
     password_hash: str
@@ -77,7 +82,7 @@ class Actor(BaseModel):
     id: int
     first_name: str
     last_name: str
-    date_of_birth: datetime.date
+    date_of_birth: date
 
     class Config:
         orm_mode = True
@@ -87,7 +92,7 @@ class Director(BaseModel):
     id: int
     first_name: str
     last_name: str
-    date_of_birth: datetime.date
+    date_of_birth: date
 
     class Config:
         orm_mode = True
@@ -98,7 +103,7 @@ class FilmOut(BaseModel):
     name: str
     description: str
     rating: float
-    release_date: datetime.date
+    release_date: date
     age_rating: int
 
     genres: List[Genre]
@@ -113,5 +118,5 @@ class FilmChange(BaseModel):
     name: str = None
     description: str = None
     rating: float = None
-    release_date: datetime.date = None
+    release_date: date = None
     age_rating: int = None

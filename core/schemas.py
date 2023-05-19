@@ -21,6 +21,7 @@ class CommentOut(BaseModel):
     comment_id: int
     user: UserForComment
     content: str
+    rating: int
     comment_datetime: datetime
 
     class Config:

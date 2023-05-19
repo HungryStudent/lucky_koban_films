@@ -46,6 +46,15 @@ class UserOut(BaseModel):
         orm_mode = True
 
 
+class UserDBCreds(BaseModel):
+    user_id: int
+    username: str
+    password_hash: str
+
+    class Config:
+        orm_mode = True
+
+
 class UserCreds(BaseModel):
     username: str
     password: str

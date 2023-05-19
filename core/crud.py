@@ -44,6 +44,10 @@ def get_user_by_user_id(db: Session, user_id) -> schemas.UserOut:
     return db.query(models.Users).filter(user_id == models.Users.user_id).first()
 
 
+def get_user_creds(db: Session, user_data: schemas.UserCreds) -> schemas.UserDBCreds:
+    return db.query(models.Users).filter(models.Users.username == user_data.username).first()
+
+
 def update_role_by_user_id(db: Session, user_id, user_role) -> schemas.UserOut:
     db.query(models.Users).filter(models.Users.user_id == user_id).update({"user_role": user_role})
     return db.query(models.Users).filter(user_id == models.Users.user_id).first()

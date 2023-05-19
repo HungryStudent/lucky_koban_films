@@ -31,7 +31,7 @@ async def create_user_request(user_data: schemas.UserCreds, db: Session = Depend
 
 @router.post("/login", status_code=200)
 async def login_user_request(user_data: schemas.UserCreds, db: Session = Depends(get_db)):
-    user = crud.get_user_by_username(db, user_data)
+    user = crud.get_user_creds(db, user_data)
     if user is None:
         raise HTTPException(403, "Invalid username or password")
     md5 = hashlib.md5()
@@ -43,6 +43,6 @@ async def login_user_request(user_data: schemas.UserCreds, db: Session = Depends
     return {"token": token}
 
 
-@router.get('/get_me')
+@router.get('/get_me', response_model=schemas.UserOut)
 async def get_me(db: Session = Depends(get_db), user_id=Depends(get_info_token)):
-    pass
+    return crud.get_user_by_user_id(db, user_id)

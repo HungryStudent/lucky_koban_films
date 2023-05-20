@@ -36,6 +36,7 @@ class CreateComment(BaseModel):
     def check_rating(cls, v):
         if not 1 <= v <= 5:
             raise RatingError
+        return v
 
 
 class UserOut(BaseModel):

@@ -58,7 +58,7 @@ def get_comments_by_film_id(db: Session, film_id):
 
 
 def create_comment(db: Session, film_id, user_id, comment_data: schemas.CreateComment):
-    comment = models.Comment(film_id=film_id, user_id=user_id, content=comment_data.content,
+    comment = models.Comment(film_id=film_id, user_id=user_id, content=comment_data.content, rating=comment_data.rating,
                              comment_datetime=func.now())
     db.add(comment)
 

@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func, update
 from sqlalchemy.orm import Session
@@ -5,11 +7,12 @@ from core import models, schemas
 
 
 def get_films(db: Session):
-    return db.query(models.Film).all()
+    return db.query(models.Film, func.avg(models.Comment.rating).label("count")).group_by(models.Film.id).all()
 
 
 def get_film_by_id(db: Session, search_film_id):
-    return db.query(models.Film).filter(models.Film.id == search_film_id).first()
+    return db.query(models.Film, func.avg(models.Comment.rating).label("count")).filter(
+        models.Film.id == search_film_id).group_by(models.Film.id).first()
 
 
 def change_film(db: Session, film_id, film_data: schemas.FilmChange):

@@ -36,7 +36,6 @@ class Film(Base):
     name = Column(VARCHAR(50))
     description = Column(VARCHAR(1000))
     age_rating = Column(Integer())
-    rating = Column(Float())
     release_date = Column(DATE())
 
     actors = relationship("Actor", secondary="actor_film", lazy='subquery')

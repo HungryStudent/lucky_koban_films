@@ -11,7 +11,7 @@ def get_films(db: Session):
 
 
 def get_film_by_id(db: Session, search_film_id):
-    return db.query(models.Film, func.avg(models.Comment.rating).label("count")).filter(
+    return db.query(models.Film, func.avg(models.Comment.rating).label("count")).join(models.Comment).filter(
         models.Film.id == search_film_id).group_by(models.Film.id).first()
 
 
